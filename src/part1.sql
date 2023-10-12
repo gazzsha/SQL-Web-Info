@@ -162,6 +162,10 @@ call import_table('Checks','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/
 call import_table('P2P','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_p2p.csv',',');
 
 
+call import_table('TransferredPoints','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_point_tras.csv',',');
+
+
+
 call import_table('Verter','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_vecter.csv',',');
 
 call import_table('XP','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_xp.csv',',');
@@ -179,6 +183,8 @@ call export_table('Verter','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/
 call export_table('xp','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/data_xp.csv',',');
 
 call export_table('friends','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/data_friends.csv',',');
+
+call export_table('TransferredPoints','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/data_point_tras.csv',',');
 
 
 
@@ -211,7 +217,7 @@ INSERT into p2p VALUES ()
 -- TRUNCATE TABLE peers CASCADE;
 -- TRUNCATE TABLE Recommendations CASCADE;
 
--- TRUNCATE TABLE timetracking CASCADE;
+--TRUNCATE TABLE TransferredPoints CASCADE;
 -- TRUNCATE TABLE p2p CASCADE;
 
 

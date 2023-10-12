@@ -183,11 +183,8 @@ call export_table('friends','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export
 
 
 
-
-
-
-
-
+select * from p2p;
+INSERT into p2p VALUES ()
 
 
 

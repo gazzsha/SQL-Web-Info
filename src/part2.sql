@@ -61,9 +61,16 @@ $$;
 select * from p2p;
 call insert_p2p('antoinco','gradyzan','C1_SimpleBashUtils','Failure','10:50:00');
 
+call insert_p2p('gradyzan','heshi','DO6_CICD','Start','19:40:00');
+call insert_p2p('gradyzan','heshi','DO6_CICD','Success','20:30:00');
+
+
 
 call insert_p2p('yura','kristlee','C1_SimpleBashUtils','Start','11:50:00');
 call insert_p2p('yura','kristlee','C1_SimpleBashUtils','Success','12:50:00');
+
+
+call insert_p2p('antoinco','kristlee','CPP1_s21_matrix+','Success','12:50:00');
 
 call insert_p2p('misha','gradyzan','C1_SimpleBashUtils','Failure','17:50:00');
 
@@ -108,6 +115,7 @@ select  * from CURRENT_DATE;
 
 -- Написать процедуру добавления проверки Verter'ом
 -- Параметры: ник проверяемого, название задания, статус проверки Verter'ом, время. 
+
 
 
 CREATE OR REPLACE PROCEDURE insert_verter(
@@ -169,9 +177,16 @@ END;
 $$;
 
 
-
-
+call insert_verter('antoinco','C7_3DViewer_v1.0','Failure','20:00:00');
 call insert_verter('yura','C4_s21_decimal','Start','17:00:00');
+
+
+call insert_verter('antoinco','CPP1_s21_matrix+','Start','13:00:00');
+
+call insert_verter('gradyzan','DO2_LinuxNetwork','Start','11:05:00');
+
+call insert_verter('gradyzan','DO2_LinuxNetwork','Success','13:21:00');
+call insert_verter('antoinco','CPP1_s21_matrix+','Success','13:26:00');
 
 
 
@@ -249,7 +264,7 @@ $$
 DECLARE
 xp_access_checks_id int = (SELECT p2p."Check" from p2p where p2p."Check" = NEW."Check" AND p2p."State" = 'Success');
 max_xp int = (select task.maxxp from task join checks on checks.task = task.title where (checks.id = NEW."Check"));
-xp_access_verter_id int = (SELECT verter.id from verter where verter."Check" = NEW."Check" AND verter."State" = 'Success');
+xp_access_verter_id int = (SELECT verter.id from verter where verter."Check" = NEW."Check" AND verter."State" = 'Failure');
 BEGIN
     IF max_xp < NEW.XPAmount OR NEW.XPAmount < 0 THEN
     RAISE  NOTICE 'XPAmount more than MaxXP!';
@@ -257,7 +272,7 @@ BEGIN
     ELSEIF xp_access_checks_id IS NULL THEN
     RAISE  NOTICE 'P2P Is Failure!';
     RETURN NULL;
-    ELSEIF xp_access_verter_id is NULL THEN
+    ELSEIF xp_access_verter_id is NOT NULL THEN
     RAISE  NOTICE 'Vecter Is Failure!';
     RETURN NULL;
     ELSE

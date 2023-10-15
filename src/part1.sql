@@ -187,6 +187,8 @@ call export_table('friends','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export
 call export_table('TransferredPoints','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/data_point_tras.csv',',');
 
 
+select * from verter;
+
 
 
 select * from p2p;

@@ -71,8 +71,54 @@ SELECT * from fnc_part3_task3('2023-10-10');
 -- task 4
 
 
-select * from TransferredPoints;
+CREATE OR REPLACE PROCEDURE fnc_part3_task4(IN result REFCURSOR = 'pr_result_part3_task4')
+LANGUAGE plpgsql    
+AS $$
+BEGIN
+OPEN result FOR
+with tb1_get as (
+select checkingpeer as peer ,sum(pointamount) as sum_ from TransferredPoints group by checkingpeer),
+tb2_set as (
+select checkedpeer as peer,sum((-1)*pointamount) as sum_ from TransferredPoints group by checkedpeer),
+tb_union as (
+select * from tb1_get
+UNION
+select * from tb2_set)
+select peer, sum(sum_) as PointsChange from tb_union
+group by peer;
+END;
+$$ 
 
+drop Procedure fnc_part3_task4;
+
+BEGIN;
+    CALL fnc_part3_task4();
+    FETCH ALL FROM "pr_result_part3_task4";
+END;
+
+-- 5) Посчитать изменение в количестве пир поинтов каждого пира по таблице, возвращаемой первой функцией из Part 3
+
+-- Результат вывести отсортированным по изменению числа поинтов. 
+-- Формат вывода: ник пира, изменение в количество пир поинтов
+
+
+CREATE OR REPLACE PROCEDURE fnc_part3_task5(IN result REFCURSOR = 'pr_result_part3_task5')
+LANGUAGE plpgsql    
+AS $$
+BEGIN
+OPEN result FOR
+select "Peer1" as Peer,sum(sum_) as PointsChange from (
+select "Peer1",Sum("PointsAmount") as sum_ from (SELECT * FROM fnc_part3_task1()) group by "Peer1"
+UNION
+select "Peer2",Sum((-1)*"PointsAmount") as sum_ from (SELECT * FROM fnc_part3_task1()) group by "Peer2")
+group by "Peer1";
+END;
+$$ 
+
+BEGIN;
+    CALL fnc_part3_task5();
+    FETCH ALL FROM "pr_result_part3_task5";
+END;
 
 -- task 6
 -- 6) Определить самое часто проверяемое задание за каждый день
@@ -332,7 +378,7 @@ END;
 -- Формат вывода: список пиров
 
 
-CREATE OR REPLACE PROCEDURE fnc_part3_task10(task1 VARCHAR(255), task2 VARCHAR(255), task3 VARCHAR(255),IN result REFCURSOR = 'pr_result_part3_task14')
+CREATE OR REPLACE PROCEDURE fnc_part3_task11(task1 VARCHAR(255), task2 VARCHAR(255), task3 VARCHAR(255),IN result REFCURSOR = 'pr_result_part3_task11')
 LANGUAGE plpgsql    
 AS $$
 BEGIN
@@ -352,8 +398,8 @@ $$
 
 
 BEGIN;
-    CALL fnc_part3_task10('C1_SimpleBashUtils','C2_s21_string+','C7_3DViewer_v1.0');
-    FETCH ALL FROM "pr_result_part3_task14";
+    CALL fnc_part3_task11('C1_SimpleBashUtils','C2_s21_string+','C7_3DViewer_v1.0');
+    FETCH ALL FROM "pr_result_part3_task11";
 END;
 
 
@@ -365,7 +411,7 @@ END;
 
 
 
-CREATE OR REPLACE PROCEDURE fnc_part3_task11(IN result REFCURSOR = 'pr_result_part3_task11')
+CREATE OR REPLACE PROCEDURE fnc_part3_task12(IN result REFCURSOR = 'pr_result_part3_task12')
 LANGUAGE plpgsql    
 AS $$
 BEGIN
@@ -382,7 +428,7 @@ $$
 
 BEGIN;
     CALL fnc_part3_task11();
-    FETCH ALL FROM "pr_result_part3_task11";
+    FETCH ALL FROM "pr_result_part3_task12";
 END;
 
 --task13
@@ -394,11 +440,70 @@ END;
 -- Формат вывода: список дней
 
 
+CREATE OR REPLACE PROCEDURE fnc_part3_task13(N INT,IN result REFCURSOR = 'pr_result_part3_task13')
+LANGUAGE plpgsql    
+AS $$
+BEGIN
+OPEN result FOR
+with tb1 as (
+select "Time",checks.date,CASE 
+    WHEN  p2p."State" = 'Success' AND xp.xpamount > (select maxxp from task where task.title = checks.task) * 0.8 THEN 1  
+    ELSE  (-1)*COUNT(*) OVER (PARTITION BY checks.Date ORDER BY "Time" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) + 1
+END as case_ from p2p join checks on checks.id = p2p."Check" FULL JOIN XP on xp."Check" = p2p."Check" 
+where p2p."State" != 'Start'
+ORDER BY checks.date,"Time" 
+), tb2 as (
+select *, CASE
+    WHEN case_ != 1 THEN
+    0
+    ELSE
+      sum(case_) OVER (PARTITION BY tb1.Date ORDER BY "Time" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+    END as count_
+from tb1 
+ORDER BY tb1.Date)
+select tb2.date from tb2 GROUP BY tb2.date HAVING MAX(count_) >= N;
+END;
+$$ 
 
-select * from p2p join checks on checks.id = p2p."Check" join xp on xp."Check" = p2p."Check" join verter on verter."Check" = p2p."Check"
+drop Procedure fnc_part3_task13;
 
 
-select * from xp
+BEGIN;
+    CALL fnc_part3_task13(3);
+    FETCH ALL FROM "pr_result_part3_task13";
+END;
+
+
+
+
+-- --выводит проверки с обнулением!!!
+-- with tb1 as (
+-- select "Time",checks.date,CASE 
+--     WHEN  p2p."State" = 'Success' AND xp.xpamount > (select maxxp from task where task.title = checks.task) * 0.8 THEN 1  
+--     ELSE  (-1)*COUNT(*) OVER (PARTITION BY checks.Date ORDER BY "Time" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) + 1
+-- END as case_ from p2p join checks on checks.id = p2p."Check" FULL JOIN XP on xp."Check" = p2p."Check" 
+-- where p2p."State" != 'Start'
+-- ORDER BY checks.date,"Time" 
+-- )
+-- select *, CASE
+--     WHEN case_ != 1 THEN
+--     0
+--     ELSE
+--       sum(case_) OVER (PARTITION BY tb1.Date ORDER BY "Time" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 
+--     END
+-- from tb1
+-- ORDER BY tb1.Date
+
+
+
+SUM(case_) OVER (
+                PARTITION BY tb1.Date
+                ORDER BY "Time",
+                "Time" ROWS BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW
+)
+select * from verter;
+
+
 
 
 -- task 14 Определить пира с наибольшим количеством XP
@@ -409,8 +514,14 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
 OPEN result FOR
+with max_tb as (
+select MAX("XP") from (select peer as "Peer",sum(xpamount) as "XP" from xp join checks on checks.id = xp."Check" GROUP BY checks.peer
+ORDER BY sum(xp.xpamount)) LIMIT 1
+),
+tb_info as (
 select peer as "Peer",sum(xpamount) as "XP" from xp join checks on checks.id = xp."Check" GROUP BY checks.peer
-ORDER BY sum(xp.xpamount) DESC LIMIT 1;
+ORDER BY sum(xp.xpamount))
+select "Peer","XP" from tb_info where "XP" = (select * from max_tb);
 END;
 $$ 
 

@@ -58,7 +58,7 @@ $$;
 
 
 
-select * from p2p;
+
 call insert_p2p('antoinco','gradyzan','C1_SimpleBashUtils','Failure','10:50:00');
 
 call insert_p2p('gradyzan','heshi','DO6_CICD','Start','19:40:00');
@@ -74,39 +74,39 @@ call insert_p2p('antoinco','kristlee','CPP1_s21_matrix+','Success','12:50:00');
 
 call insert_p2p('misha','gradyzan','C1_SimpleBashUtils','Failure','17:50:00');
 
-select "Time" From p2p where p2p."Check" = (select checks.id from p2p join checks on checks.id = p2p."Check"
-                where checkingpeer =  'gradyzan' and checks.peer = 'misha' and checks.task = 'C1_SimpleBashUtils'
-                Group BY checks.id
-                HAVING count (*) % 2 != 0)
 
-INSERT into p2p VALUES (49,1,'gradyzan','Start','1:55:11');
+-- drop Procedure insert_p2p;
 
 
+-- select "Time" From p2p where p2p."Check" = (select checks.id from p2p join checks on checks.id = p2p."Check"
+--                 where checkingpeer =  'gradyzan' and checks.peer = 'misha' and checks.task = 'C1_SimpleBashUtils'
+--                 Group BY checks.id
+--                 HAVING count (*) % 2 != 0)
 
-(select checks.id from p2p join checks on checks.id = p2p."Check"
-            where checkingpeer =  'gradyzan' and checks.peer = 'antoinco' and checks.task = 'C1_SimpleBashUtils'
-            Group BY checks.id
-            HAVING count (*) % 2 != 0)
-
-select * from checks;
-
-select * from p2p JOIN checks on checks.id = p2p."Check";
+-- INSERT into p2p VALUES (49,1,'gradyzan','Start','1:55:11');
 
 
-drop Procedure insert_p2p;
+
+-- (select checks.id from p2p join checks on checks.id = p2p."Check"
+--             where checkingpeer =  'gradyzan' and checks.peer = 'antoinco' and checks.task = 'C1_SimpleBashUtils'
+--             Group BY checks.id
+--             HAVING count (*) % 2 != 0)
+
+-- select * from checks;
+
+-- select * from p2p JOIN checks on checks.id = p2p."Check";
+
+-- (SELECT count(*) FROM P2P JOIN checks ON p2p."Check" = checks.id
+-- where checks.peer = 'antoinco' AND ( checks.task = (select parenttask from task where task.title = 'C1_SimpleBashUtils') or checks.task = 'C1_SimpleBashUtils')
+-- and p2p."State" = 'Success' 
+-- GROUP BY p2p."State");
+
+-- (select count(checks.id) from p2p join checks on checks.id = p2p."Check"
+-- where checkingpeer =  'gradyzan' and checks.peer = 'antoinco' and checks.task = 'C1_SimpleBashUtils'
+-- GROUP BY checks.ID);
 
 
-(SELECT count(*) FROM P2P JOIN checks ON p2p."Check" = checks.id
-where checks.peer = 'antoinco' AND ( checks.task = (select parenttask from task where task.title = 'C1_SimpleBashUtils') or checks.task = 'C1_SimpleBashUtils')
-and p2p."State" = 'Success' 
-GROUP BY p2p."State");
-
-(select count(checks.id) from p2p join checks on checks.id = p2p."Check"
-where checkingpeer =  'gradyzan' and checks.peer = 'antoinco' and checks.task = 'C1_SimpleBashUtils'
-GROUP BY checks.ID);
-
-
-select  * from CURRENT_DATE;
+-- select  * from CURRENT_DATE;
 
 
 
@@ -188,30 +188,30 @@ call insert_verter('gradyzan','DO2_LinuxNetwork','Start','11:05:00');
 call insert_verter('gradyzan','DO2_LinuxNetwork','Success','13:21:00');
 call insert_verter('antoinco','CPP1_s21_matrix+','Success','13:26:00');
 
+-- drop Procedure insert_verter;
+
+-- select * from verter;
 
 
-select * from verter;
+-- drop Procedure insert_verter;
 
-
-drop Procedure insert_verter;
-
-delete from verter where id = 38;
+-- delete from verter where id = 38;
 
 
 
--- Первое время перед проверкой
-Select  tb."Check",tb."Time" FROM (select p2p."Check",p2p."Time" from p2p join checks 
-on checks.id = p2p."Check" where checks.task = 'C1_SimpleBashUtils' 
-and checks.peer = 'antoinco' AND p2p."State" = 'Success') as tb
-WHERE ('17:21:20' > tb."Time")
-ORDER BY tb."Time" DESC
-LIMIT 1
+-- -- Первое время перед проверкой
+-- Select  tb."Check",tb."Time" FROM (select p2p."Check",p2p."Time" from p2p join checks 
+-- on checks.id = p2p."Check" where checks.task = 'C1_SimpleBashUtils' 
+-- and checks.peer = 'antoinco' AND p2p."State" = 'Success') as tb
+-- WHERE ('17:21:20' > tb."Time")
+-- ORDER BY tb."Time" DESC
+-- LIMIT 1
 
 
-select count(*) from Verter where "Check" = 17 GROUP BY "Check"
+-- select count(*) from Verter where "Check" = 17 GROUP BY "Check"
 
 
-select * from p2p join checks on p2p."Check" = checks.id
+-- select * from p2p join checks on p2p."Check" = checks.id
 
 
 --- PART 3
@@ -241,13 +241,10 @@ CREATE TRIGGER trg_person_update_audit
   WHEN (NEW."State" = 'Start')
   EXECUTE PROCEDURE fnc_trg_person_update_point_trans();
 
-  select * from transferredpoints;
 
-select * from p2p join checks on p2p."Check" = checks.id
+-- drop Function fnc_trg_person_update_point_trans;
 
-drop Function fnc_trg_person_update_point_trans;
-
-DROP TRIGGER trg_person_update_audit ON p2p;
+-- DROP TRIGGER trg_person_update_audit ON p2p;
 
 
 
@@ -287,10 +284,6 @@ CREATE TRIGGER trg_table_before_update
   FOR EACH ROW
   EXECUTE PROCEDURE fnc_trg_update_xp_table();
 
-drop FUNCTION fnc_trg_update_xp_table;
-drop TRIGGER trg_table_before_update on xp;
-select * from verter;
-select * from p2p JOIN checks on checks.id = p2p."Check";
-
-select * from xp;
+-- drop FUNCTION fnc_trg_update_xp_table;
+-- drop TRIGGER trg_table_before_update on xp;
 INSERT INTO XP VALUES (16,30,100);

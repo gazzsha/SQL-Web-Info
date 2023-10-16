@@ -1,4 +1,4 @@
-id,peer,recommendedpeer
+id,peer1,peer2
 1,gradyzan,antoinco
 2,dimas,kristlee
 3,kensi,heshi
@@ -10,6 +10,3 @@ id,peer,recommendedpeer
 9,leva,artem
 10,artem,gradyzan
 11,dimas,gradyzan
-12,antoinco,masha
-13,antoinco,kristlee
-14,kristlee,miki

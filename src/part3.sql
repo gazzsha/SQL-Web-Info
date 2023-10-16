@@ -45,7 +45,7 @@ where p2p."State" = 'Success' AND verter."State" = 'Success';
 END;
 $$ LANGUAGE plpgsql;
 
-drop Function fnc_part3_task2;
+--drop Function fnc_part3_task2;
 
 select * from fnc_part3_task2();
 
@@ -89,7 +89,7 @@ group by peer;
 END;
 $$ 
 
-drop Procedure fnc_part3_task4;
+--drop Procedure fnc_part3_task4;
 
 BEGIN;
     CALL fnc_part3_task4();
@@ -143,7 +143,7 @@ WHERE tb1.count = tb2.max_count;
 END;
 $$ 
 
-drop Procedure fnc_part3_task6;
+--drop Procedure fnc_part3_task6;
 
 
 BEGIN;
@@ -202,16 +202,12 @@ END IF;
 END;
 $$
 
-drop Procedure fnc_part3_task7;
+--drop Procedure fnc_part3_task7;
 
 BEGIN;
     CALL fnc_part3_task7('C');
     FETCH ALL FROM "pr_result_part3_task7";
 END;
-
-
-
-
 
 -- select 
 -- select * from p2p join checks on checks.id =p2p."Check" join verter on verter."Check" = p2p."Check" where checks.task = 'DO1_Linux'
@@ -254,7 +250,7 @@ select tb1.peer1 as Peer,recommendedpeer from tb1 join tb2 on tb1.peer1 = tb2.pe
 END;
 $$
 
-drop Procedure fnc_part3_task8;
+--drop Procedure fnc_part3_task8;
 
 BEGIN;
     CALL fnc_part3_task8();
@@ -297,7 +293,7 @@ select count_peers_task1 as StartedBlock1,count_peers_task2 as StartedBlock2,cou
 END;
 $$
 
-drop Procedure fnc_part3_task9;
+--drop Procedure fnc_part3_task9;
 
 BEGIN;
     CALL fnc_part3_task9('C','DO');
@@ -331,7 +327,7 @@ ROUND(CAST (((count_failed_peers::NUMERIC) * 100 / (count_peers_started::NUMERIC
 END;
 $$
 
-drop Procedure fnc_part3_task10;
+--drop Procedure fnc_part3_task10;
 
 BEGIN;
     CALL fnc_part3_task10();
@@ -427,7 +423,7 @@ $$
 
 
 BEGIN;
-    CALL fnc_part3_task11();
+    CALL fnc_part3_task12();
     FETCH ALL FROM "pr_result_part3_task12";
 END;
 
@@ -465,7 +461,7 @@ select tb2.date from tb2 GROUP BY tb2.date HAVING MAX(count_) >= N;
 END;
 $$ 
 
-drop Procedure fnc_part3_task13;
+--drop Procedure fnc_part3_task13;
 
 
 BEGIN;
@@ -496,16 +492,6 @@ END;
 
 
 
-SUM(case_) OVER (
-                PARTITION BY tb1.Date
-                ORDER BY "Time",
-                "Time" ROWS BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW
-)
-select * from verter;
-
-
-
-
 -- task 14 Определить пира с наибольшим количеством XP
 -- Формат вывода: ник пира, количество XP
 
@@ -530,7 +516,7 @@ BEGIN;
     FETCH ALL FROM "pr_result_part3_task14";
 END;
 
-drop Procedure fnc_part3_task14;
+--drop Procedure fnc_part3_task14;
 
 
 -- task 15 
@@ -557,7 +543,7 @@ BEGIN;
     FETCH ALL FROM "pr_result_part3_task15";
 END;
 
-drop Procedure fnc_part3_task15;
+--drop Procedure fnc_part3_task15;
 
 
 -- task 16 
@@ -580,7 +566,7 @@ Select peer from tb1 GROUP BY peer having sum(count_) > M;
 END;
 $$ 
 
-drop Procedure fnc_part3_task16;
+--drop Procedure fnc_part3_task16;
 
 BEGIN;
     CALL fnc_part3_task16(10,0);
@@ -624,7 +610,7 @@ BEGIN;
     FETCH ALL FROM "pr_result_part3_task17";
 END;
 
-drop Procedure fnc_part3_task16;
+--drop Procedure fnc_part3_task17;
 
 
 

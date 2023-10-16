@@ -142,12 +142,7 @@ END;
 $$;
 
 
-#  EXECUTE ('COPY ''target_table'' FROM ''path_file''  DELIMITER ''delim'' CSV HEADER');
-
-
-
-select *from peers;
-drop Procedure import_table;
+--drop Procedure import_table;
 
 call import_table('Peers','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_peers.csv',',');
 call import_table('Recommendations','D:/school_21_projects/SQL2_Info21_v1.0-1/src/import/data_recommended.csv',',');
@@ -187,12 +182,10 @@ call export_table('friends','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export
 call export_table('TransferredPoints','D:/school_21_projects/SQL2_Info21_v1.0-1/src/export/data_point_tras.csv',',');
 
 
-select * from verter;
 
 
 
-select * from p2p;
-INSERT into p2p VALUES ()
+
 
 
 
